@@ -70,6 +70,6 @@ sam --version
 
 
 ## Refereces:
-1. [https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install-linux.html]
-2. [https://phoenixnap.com/kb/how-to-install-docker-on-ubuntu-18-04]
-3. [https://github.com/Homebrew/linuxbrew-core/issues/13596]
+1. https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install-linux.html
+2. https://phoenixnap.com/kb/how-to-install-docker-on-ubuntu-18-04
+3. https://github.com/Homebrew/linuxbrew-core/issues/13596
