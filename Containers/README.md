@@ -44,3 +44,8 @@ sudo usermod -a -G docker ec2-user
 ```
 docker run hello-world
 ```
+
+## Installing using script
+
+1. Download script
+```
