@@ -36,3 +36,27 @@ The Principal defines which identity/user, this policy applies to. In identity p
     ]
 }
 
+
+
+
+
+
+## AWS Cross Account Access Using IAM role.
+1. Create a role in source account and attach following policy to this role. So that the resource to which this role is attached, can assume role using sts.
+
+```
+{
+"Version": "2012-10-17",
+"Statement": [
+{
+"Effect": "Allow",
+"Action": [
+"sts:AssumeRole"
+],
+"Resource": [
+"arn:aws:iam::<TARGET_ACCOUNT_ID>:role/<TARGET_ACC_ROLE_NAME>"
+]
+}
+]
+}
+```
