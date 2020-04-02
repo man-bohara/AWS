@@ -83,14 +83,14 @@ The Principal defines which identity/user, this policy applies to. In identity p
 b3 = boto3.session.Session()
 sts = b3.client('sts')
 response = sts.assume_role(
-RoleArn='arn:aws:iam::<TARGET_ACCOUNT_ID>:role/<TARGET_ACC_ROLE_NAME>',
-RoleSessionName='sts assume role session'
+    RoleArn='arn:aws:iam::<TARGET_ACCOUNT_ID>:role/<TARGET_ACC_ROLE_NAME>',
+    RoleSessionName='sts assume role session'
 )
 
 ec2=boto3.client('ec2',region_name='us-east-1',
-aws_access_key_id=response['Credentials']['AccessKeyId'],
-aws_secret_access_key=response['Credentials']['SecretAccessKey'],
-aws_session_token=response['Credentials']['SessionToken']
+    aws_access_key_id=response['Credentials']['AccessKeyId'],
+    aws_secret_access_key=response['Credentials']['SecretAccessKey'],
+    aws_session_token=response['Credentials']['SessionToken']
 )
 
 ec2s = ec2.describe_instances()
