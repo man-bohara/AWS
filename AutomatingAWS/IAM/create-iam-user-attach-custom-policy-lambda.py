@@ -1,5 +1,5 @@
-import json
 import boto3
+import json, string, random
 
 def lambda_handler(event, context):
     
@@ -48,11 +48,13 @@ def lambda_handler(event, context):
             UserName= user_name,
             PolicyArn= policy_arn
         )
-
+        
+    password = randomString()
+        
     try:
         login_profile = iam_client.create_login_profile(
                 UserName= user_name,
-                Password = 'abc123',
+                Password = password,
                 PasswordResetRequired = True
             )
     except:
@@ -60,4 +62,9 @@ def lambda_handler(event, context):
     
     print('User with UserName:{0} got created successfully'.format(user_name))
     
-    return user_name
+    return user_name, password
+    
+
+def randomString(stringLength=12):
+    letters = string.ascii_lowercase
+    return ''.join(random.choice(letters) for i in range(stringLength))
