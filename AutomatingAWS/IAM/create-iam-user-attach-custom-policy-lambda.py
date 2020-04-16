@@ -3,44 +3,61 @@ import boto3
 
 def lambda_handler(event, context):
     
-    iam = boto3.resource('iam')
+    iam_client = boto3.client('iam')
     
-    user = iam.User('sri.bohara')
-    
+    user_name = 'sri.bohara'
     try:
-        user.create(
+        user = iam_client.create_user(
+            UserName=user_name,
             Tags= [
                 {
                     'Key': 'Owner',
-                    'Value': 'man.bohara'
+                    'Value': 'ms.bohara'
                 }
                 ]
             )
     except:
         pass
         
-    policy = {
+    policy_json = {
                 "Version": "2012-10-17",
                 "Statement": [{
                     "Effect": "Allow",
                     "Action": [
-                        "ec2:*",
-                        "s3:*"
+                        "ec2:*"
                         ],
                     "Resource":"*"
                 }]
             }
-    policy = iam.create_policy(
-            PolicyName= 'ec2-s3-full-access',
-            PolicyDocument= json.dumps(policy)
-        )
+    
+    policy_arn = ''
+    account_id = '827178005985'
+    policy_name = 'ec2-full-access'
+    
+    try:
+        policy = iam_client.create_policy(
+                PolicyName= policy_name,
+                PolicyDocument= json.dumps(policy_json)
+            )
+        policy_arn = policy['Policy']['Arn']
+    except:
+        policy_arn = 'arn:aws:iam::'+account_id+':policy/'+policy_name
     
     
-    user.attach_policy(
-            PolicyArn= policy['policy']['Arn']
+    response = iam_client.attach_user_policy(
+            UserName= user_name,
+            PolicyArn= policy_arn
         )
 
-    user.create_login_profile(
-            Password = 'abc123',
-            PasswordResetRequired = True
-        )
+    try:
+        login_profile = iam_client.create_login_profile(
+                UserName= user_name,
+                Password = 'abc123',
+                PasswordResetRequired = True
+            )
+    except:
+        pass
+    
+    print('User with UserName:{0} got created successfully'.format(user_name))
+    
+    return user_name
