@@ -38,7 +38,7 @@ def lambda_handler(event, context):
                 "Action": [
                     "s3:ListBucket"
                 ],
-                "Resource": "arn:aws:s3:::manmohan-videos-bucket",
+                "Resource": "arn:aws:s3:::<YOUR_S3_BUCKET_NAME>",
                 "Condition": {
                     "StringLike": {
                         "s3:prefix": ["videos/*"]
@@ -51,7 +51,7 @@ def lambda_handler(event, context):
                 "Action": [
                     "s3:GetObject"
                 ],
-                "Resource": "arn:aws:s3:::manmohan-videos-bucket/vidoes/*"
+                "Resource": "arn:aws:s3:::<YOUR_S3_BUCKET_NAME>/vidoes/*"
             }
         ]
     }
