@@ -10,6 +10,8 @@ def lambda_handler(event, context):
     user_name = event['UserName']
     policy_name = event['PolicyName']
     account_id = event['AccountId']
+    sender_email = event['SenderEmail']
+    receiver_email = event['ReceiverEmail']
 
     try:
         user = iam_client.create_user(
@@ -89,7 +91,11 @@ def lambda_handler(event, context):
             UserName=user_name
         )
     except ClientError as error:
-        print('Unexpected error occurred while creating access kye... hence cleaning up')
+        print('Unexpected error occurred while creating access key... hence cleaning up')
+        iam_client.detach_user_policy(
+            UserName= user_name,
+            PolicyArn= policy_arn
+        )
         iam_client.delete_user(UserName=user_name)
         return 'User could not be create', error
 
@@ -101,10 +107,10 @@ def lambda_handler(event, context):
     ses_client = boto3.client('ses')
 
     ses_res = ses_client.send_email(
-        Source='manmohan.bohara@gmail.com',
+        Source=sender_email,
         Destination={
             'ToAddresses': [
-                'manmohan.bohara@gmail.com'
+                receiver_email
             ]
         },
         Message={
