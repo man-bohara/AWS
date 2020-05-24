@@ -5,8 +5,9 @@ from botocore.exceptions import ClientError
 
 list_users_to_remove = []
 list_access_keys_to_remove = []
-date_now = datetime.datetime.now() + datetime.timedelta(days=91)
+date_now = datetime.datetime.now()
 iam_client = boto3.client('iam')
+max_idle_days = 90
 
 def lambda_handler(event, context):
 
@@ -50,7 +51,7 @@ def check_credentials(res_users):
 
             difference = date_now - last_used_date
 
-            if difference.days > 90:
+            if difference.days > max_idle_days:
                 list_users_to_remove.append(user['UserName'])
 
         # Below we are checking for access keys last usage
@@ -73,5 +74,5 @@ def check_credentials(res_users):
 
         difference = date_now - last_used_date
 
-        if difference.days > 90:
+        if difference.days > max_idle_days:
             list_access_keys_to_remove.append(access_key_id)
