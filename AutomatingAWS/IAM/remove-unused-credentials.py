@@ -33,9 +33,17 @@ def lambda_handler(event, context):
 
     for user_name in list_users_to_remove:
         print('User {0} needs to be removed'.format(user_name))
+        iam_client.delete_login_profile(
+            UserName=user_name
+        )
+        iam_client.delete_access_key(access_key_id)
+        iam_client.delete_user(
+            UserName= user_name
+        )
 
     for access_key in list_access_keys_to_remove:
         print('Access kye {0} needs to be removed'.format(access_key))
+        iam_client.delete_access_key(access_key_id)
 
     return list_users_to_remove, list_access_keys_to_remove
 
