@@ -6,7 +6,7 @@ from botocore.exceptions import ClientError
 
 list_users_to_remove = []
 list_access_keys_to_remove = []
-date_now = datetime.now() + timedelta(days=90)
+date_now = datetime.now()
 iam_client = boto3.client('iam')
 max_idle_days = 90
 max_items = 50
@@ -106,3 +106,4 @@ def check_credentials(res_users):
 
         if difference.days > max_idle_days:
             list_access_keys_to_remove.append(access_key_id)
+
