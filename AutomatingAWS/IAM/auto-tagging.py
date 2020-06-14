@@ -21,7 +21,7 @@ def lambda_handler(event, context):
 
     try:
         sts_response = sts_client.assume_role(
-            RoleArn='arn:aws:iam::087851441689:role/AdminRoleForAssuming',
+            RoleArn='<ARN OF THE ROLE IN LINKED ACCOUNT>',
             RoleSessionName='assume_role_session'
         )
     except ClientError as error:
