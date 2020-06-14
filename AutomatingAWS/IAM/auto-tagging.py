@@ -4,7 +4,8 @@ from botocore.exceptions import ClientError
 
 
 def lambda_handler(event, context):
-    print('Recieved event : ', event)
+
+    print('Received event : ', event)
 
     cw_event = json.loads(event['Records'][0]['Sns']['Message'])
 
@@ -12,30 +13,28 @@ def lambda_handler(event, context):
 
     region = cw_event['region']
     account = cw_event['account']
-    reator = cw_event['detail']['userIdentity']['principalId']
+    creator = cw_event['detail']['userIdentity']['principalId']
 
-    if account == '031852407939':
+    instance_arn = get_arn(cw_event)
 
-        instance_arn = get_arn(cw_event)
+    rg_client = boto3.client('resourcegroupstaggingapi')
 
-        rg_client = boto3.client('resourcegroupstaggingapi')
+    print('creating tag for instance {}'.format(instance_arn))
 
-        print('creating tag for instance {}'.format(instance_arn))
-
-        try:
-            print('instance arn is ', instance_arn)
-            response = rg_client.tag_resources(
-                ResourceARNList=[
-                    instance_arn,
-                ],
-                Tags={
-                    'Creator': 'man.bohara',
-                    'Owner': account
-                }
-            )
-            print('tag got created')
-        except ClientError as error:
-            print(error)
+    try:
+        print('instance arn is ', instance_arn)
+        response = rg_client.tag_resources(
+            ResourceARNList=[
+                instance_arn,
+            ],
+            Tags={
+                'Creator': creator,
+                'Owner': account
+            }
+        )
+        print('tag got created')
+    except ClientError as error:
+        print(error)
 
 
 def get_arn(event):
