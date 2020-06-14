@@ -17,7 +17,22 @@ def lambda_handler(event, context):
 
     instance_arn = get_arn(cw_event)
 
-    rg_client = boto3.client('resourcegroupstaggingapi')
+    sts_client = boto3.client('sts')
+
+    try:
+        sts_response = sts_client.assume_role(
+            RoleArn='arn:aws:iam::087851441689:role/AdminRoleForAssuming',
+            RoleSessionName='assume_role_session'
+        )
+    except ClientError as error:
+        print('Unexpected error occurred... could not assume role', error)
+        return error
+
+    rg_client = boto3.client('resourcegroupstaggingapi',
+                             region,
+                             aws_access_key_id=sts_response['Credentials']['AccessKeyId'],
+                             aws_secret_access_key=sts_response['Credentials']['SecretAccessKey'],
+                             aws_session_token=sts_response['Credentials']['SessionToken'])
 
     print('creating tag for instance {}'.format(instance_arn))
 
